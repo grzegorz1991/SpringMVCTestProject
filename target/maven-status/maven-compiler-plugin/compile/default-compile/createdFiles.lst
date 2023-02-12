@@ -1,4 +1,8 @@
-th\grzegorzNauka\contact\dao\ContactDAO.class
-th\grzegorzNauka\HelloController.class
-th\grzegorzNauka\contact\dao\ContactDAOImpl.class
+th\grzegorzNauka\contact\dao\ContactDAOImpl$1.class
+th\grzegorzNauka\contact\controller\MainController.class
+th\grzegorzNauka\contact\config\WebAppInitializer.class
 th\grzegorzNauka\contact\model\Contact.class
+th\grzegorzNauka\contact\dao\ContactDAO.class
+th\grzegorzNauka\contact\dao\ContactDAOImpl$2.class
+th\grzegorzNauka\contact\dao\ContactDAOImpl.class
+th\grzegorzNauka\contact\config\SpringMvcConfig.class
