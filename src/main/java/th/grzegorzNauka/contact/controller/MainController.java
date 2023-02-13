@@ -39,7 +39,10 @@ public class MainController {
 
     @RequestMapping(value = "/saveContact", method = RequestMethod.POST)
     public ModelAndView saveContact(@ModelAttribute Contact contact){
-        contactDAO.save(contact);
+        if(contact.getId() == null){
+            contactDAO.save(contact);}
+        else
+            contactDAO.update(contact);
         return new ModelAndView("redirect:/");
     }
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
