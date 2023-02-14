@@ -20,7 +20,8 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @Configuration
 @ComponentScan(basePackages="th.grzegorzNauka.contact")
-@PropertySource("classpath:config.properties")
+//@PropertySource("classpath:config.properties")
+@PropertySource("classpath:postgreSQLconfig.properties")
 @EnableWebMvc
 public class SpringMvcConfig extends WebMvcConfigurerAdapter{
 
@@ -41,6 +42,7 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter{
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
     }
     */
+    /*
     @Bean
     public DataSource getDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -57,6 +59,24 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter{
 
         return dataSource;
     }
+    */
+    @Bean
+    public DataSource getDataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+
+        String driverClassName = env.getProperty("spring.datasource.driver-class-name");
+        String url = env.getProperty("spring.datasource.url");
+        String username = env.getProperty("spring.datasource.username");
+        String password = env.getProperty("spring.datasource.password");
+
+        dataSource.setDriverClassName(driverClassName);
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+
+        return dataSource;
+    }
+
 
     @Bean
     public ContactDAO getContactDAO() {
