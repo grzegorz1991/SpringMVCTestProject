@@ -3,6 +3,8 @@ package th.grzegorzNauka.contact.config;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import th.grzegorzNauka.contact.dao.ContactDAO;
 import th.grzegorzNauka.contact.dao.ContactDAOImpl;
@@ -20,13 +22,11 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @Configuration
 @ComponentScan(basePackages="th.grzegorzNauka.contact")
-//@PropertySource("classpath:config.properties")
-@PropertySource("classpath:postgreSQLconfig.properties")
+
 @EnableWebMvc
 public class SpringMvcConfig extends WebMvcConfigurerAdapter{
 
-    @Autowired
-    private Environment env;
+
 
     @Bean
     public ViewResolver getViewResolver(){
@@ -35,35 +35,21 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter{
         resolver.setSuffix(".jsp");
         return resolver;
     }
-
-    /*
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
-    }
-    */
     /*
     @Bean
-    public DataSource getDataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-
-        String driverClassName = env.getProperty("driverClassName");
-        String url = env.getProperty("url");
-        String root = env.getProperty("root");
-        String password = env.getProperty("password");
-
-        dataSource.setDriverClassName(driverClassName);
-        dataSource.setUrl(url);
-        dataSource.setUsername(root);
-        dataSource.setPassword(password);
-
-        return dataSource;
+    public static PropertySourcesPlaceholderConfigurer propertiesResolver() {
+        return new PropertySourcesPlaceholderConfigurer();
     }
     */
+
     @Bean
     public DataSource getDataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-
+        //Creating new context
+        ClassPathXmlApplicationContext context =
+                new ClassPathXmlApplicationContext("postgreSQLConnectionContext.xml");
+        //retrieving bean from context
+        DriverManagerDataSource dataSource = context.getBean("postgreSQLContext", DriverManagerDataSource.class);
+        /*
         String driverClassName = env.getProperty("spring.datasource.driver-class-name");
         String url = env.getProperty("spring.datasource.url");
         String username = env.getProperty("spring.datasource.username");
@@ -73,7 +59,7 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter{
         dataSource.setUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
-
+*/
         return dataSource;
     }
 

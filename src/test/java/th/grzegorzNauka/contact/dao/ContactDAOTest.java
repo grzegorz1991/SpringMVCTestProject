@@ -1,28 +1,48 @@
 package th.grzegorzNauka.contact.dao;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import th.grzegorzNauka.contact.config.SpringMvcConfig;
 import th.grzegorzNauka.contact.model.Contact;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = SpringMvcConfig.class) // ,loader = AnnotationConfigContextLoader.class)
+@TestPropertySource(value ="classpath:postgreSQLconfig.properties")
 class ContactDAOTest {
-
+    @Autowired
     private DriverManagerDataSource dataSource;
+    @Autowired
     private ContactDAO dao;
 
+    @Value("${string.message}")
+    String message;
     @BeforeEach
     void beforeEach(){
+        System.out.print(message);
+
         dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/contactdb?useSSL=false");
-        dataSource.setUsername("root");
-        dataSource.setPassword("6SIC8lyskYSNClWe0bXi");
+        dataSource.setDriverClassName("org.postgresql.Driver");
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/contactdb");
+        dataSource.setUsername("postgres");
+        dataSource.setPassword("ppsYIaXcHX87ad7iyk8w");
 
         dao = new ContactDAOImpl(dataSource);
     }
-
+    Integer testId(){
+        return dao.list().get(dao.list().size()-1).getId();
+    }
 
     @org.junit.jupiter.api.Test
     void save() {
@@ -34,14 +54,14 @@ class ContactDAOTest {
 
     @org.junit.jupiter.api.Test
     void update() {
-        Contact contact = new Contact(6,"John MCKenny", "still@jobs.com", "Texas", "12345655590");
+        Contact contact = new Contact(testId(),"Test MCKenny", "still@jobs.com", "Texas", "12345655590");
         int result = dao.update(contact);
         assertTrue(result > 0);
     }
 
     @org.junit.jupiter.api.Test
     void get() {
-        Integer id = 1;
+        Integer id = testId();
         Contact contact = dao.get(id);
         if(contact != null){
             System.out.println(contact);
@@ -51,7 +71,7 @@ class ContactDAOTest {
 
     @org.junit.jupiter.api.Test
     void delete() {
-        Integer id = 11;
+        Integer id = testId();
         int result = dao.delete(id);
         assertTrue(result > 0);
     }
