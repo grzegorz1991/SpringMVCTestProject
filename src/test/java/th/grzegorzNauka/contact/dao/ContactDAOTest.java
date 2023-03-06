@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -30,13 +31,12 @@ class ContactDAOTest {
     String message;
     @BeforeEach
     void beforeEach(){
-        System.out.print(message);
-
-        dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/contactdb");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("ppsYIaXcHX87ad7iyk8w");
+        //Creating new context
+        ClassPathXmlApplicationContext context =
+                new ClassPathXmlApplicationContext("postgreSQLConnectionContext.xml");
+        //retrieving bean from context
+        DriverManagerDataSource dataSource = context.getBean("postgreSQLContext", DriverManagerDataSource.class);
+        context.close();
 
         dao = new ContactDAOImpl(dataSource);
     }

@@ -22,11 +22,8 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @Configuration
 @ComponentScan(basePackages="th.grzegorzNauka.contact")
-
 @EnableWebMvc
 public class SpringMvcConfig extends WebMvcConfigurerAdapter{
-
-
 
     @Bean
     public ViewResolver getViewResolver(){
@@ -35,12 +32,7 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter{
         resolver.setSuffix(".jsp");
         return resolver;
     }
-    /*
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertiesResolver() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
-    */
+
 
     @Bean
     public DataSource getDataSource() {
@@ -49,20 +41,9 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter{
                 new ClassPathXmlApplicationContext("postgreSQLConnectionContext.xml");
         //retrieving bean from context
         DriverManagerDataSource dataSource = context.getBean("postgreSQLContext", DriverManagerDataSource.class);
-        /*
-        String driverClassName = env.getProperty("spring.datasource.driver-class-name");
-        String url = env.getProperty("spring.datasource.url");
-        String username = env.getProperty("spring.datasource.username");
-        String password = env.getProperty("spring.datasource.password");
-
-        dataSource.setDriverClassName(driverClassName);
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-*/
+        context.close();
         return dataSource;
     }
-
 
     @Bean
     public ContactDAO getContactDAO() {
